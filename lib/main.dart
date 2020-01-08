@@ -1,19 +1,39 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:weather_app/colors.dart';
 import 'package:weather_app/strings.dart';
 import 'package:weather_app/ui/home_screen.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatelessWidget { 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: MyStrings.appName,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        textTheme: GoogleFonts.ubuntuTextTheme(),
+        appBarTheme: AppBarTheme(
+          textTheme: GoogleFonts.ubuntuTextTheme(TextTheme(
+              title: TextStyle(
+                  fontSize: 24,
+                  color: MyColors.grey,
+                  fontWeight: FontWeight.w600))),
+          iconTheme: IconThemeData(color: Colors.black),
+          brightness: (Platform.isIOS ? Brightness.light : null),
+          color: Colors.white,
+          elevation: 0,
+        ),
+        buttonTheme: ButtonThemeData(
+            buttonColor: MyColors.blue,
+            splashColor: Colors.transparent,
+            padding: EdgeInsets.all(14),
+            shape: StadiumBorder()),
       ),
-      home: MyHomePage(),
+      title: MyStrings.appName,
+      home: HomeScreen(),
     );
   }
 }
