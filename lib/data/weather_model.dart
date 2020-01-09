@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/colors.dart';
 
 class AllWeather {
   final String city;
@@ -63,11 +64,11 @@ class AllWeather {
 class DayWeather {
   final List<Weather> weatherList;
   final String temperature;
-  final String weatherIcon;
+  final int condition;
 
   DayWeather({
     @required this.temperature,
-    @required this.weatherIcon,
+    @required this.condition,
     @required this.weatherList,
   });
 
@@ -80,9 +81,10 @@ class DayWeather {
     });
 
     return DayWeather(
-        weatherList: weatherList,
-        temperature: '${(averageDayTemperature / 8).round().toString()} °C',
-        weatherIcon: getWeatherIcon((averageCondition / 8).round()));
+      weatherList: weatherList,
+      temperature: '${(averageDayTemperature / 8).round().toString()} °C',
+      condition: (averageCondition / 8).round(),
+    );
   }
 }
 
@@ -91,14 +93,12 @@ class Weather {
   final DateTime time;
   final double temp;
   final String temperature;
-  final String weatherIcon;
 
   Weather({
     @required this.condition,
     @required this.temp,
     @required this.time,
     @required this.temperature,
-    @required this.weatherIcon,
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) {
@@ -112,8 +112,7 @@ class Weather {
         condition: condition,
         temp: temp,
         time: finalTime,
-        temperature: finalTemp,
-        weatherIcon: getWeatherIcon(condition));
+        temperature: finalTemp);
   }
 }
 
@@ -137,6 +136,28 @@ String getWeatherIcon(int condition) {
     weatherIcon = '';
   }
   return weatherIcon;
+}
+
+Color getColor(int condition) {
+  Color color = MyColors.blue;
+  if (condition < 300) {
+    color = Colors.orange[700];
+  } else if (condition < 400) {
+    color = MyColors.blue;
+  } else if (condition < 600) {
+    color = MyColors.blue;
+  } else if (condition < 700) {
+    color = Colors.white;
+  } else if (condition < 800) {
+    color = Colors.blueGrey;
+  } else if (condition == 800) {
+    color = MyColors.yellow;
+  } else if (condition <= 804) {
+    color = MyColors.blue;
+  } else {
+    color = MyColors.blue;
+  }
+  return color;
 }
 
 // String getMessage(int temp) {

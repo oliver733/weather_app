@@ -39,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _getWeatherData() async {
     AllWeather allWeather = await WeatherClass().getWeather();
-    print(allWeather.day1);
     setState(() {
       _waiting = false;
       _allWeather = allWeather;
@@ -149,10 +148,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _listTile(
       {@required String formattedTime,
       @required String temp,
-      @required String icon}) {
+      @required int condition}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
-      color: MyColors.blue,
+      color: getColor(condition),
       child: ListTile(
         leading: Text(
           formattedTime,
@@ -174,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 20,
             ),
             Text(
-              icon,
+              getWeatherIcon(condition),
               style: TextStyle(color: Colors.white, fontSize: 24),
             ),
           ],
@@ -194,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return _listTile(
               formattedTime: formattedTime,
               temp: weather.temperature,
-              icon: weather.weatherIcon);
+              condition: weather.condition);
         });
   }
 
@@ -205,36 +204,36 @@ class _HomeScreenState extends State<HomeScreen> {
           DateFormat dayFormat = DateFormat('MMMd');
           String formattedTime = '';
           String temperature = '';
-          String weatherIcon = '';
+          int condition = 0;
           if (index == 0) {
             formattedTime = "Today";
             temperature = _allWeather.day1.temperature;
-            weatherIcon = _allWeather.day1.weatherIcon;
+            condition = _allWeather.day1.condition;
           } else if (index == 1) {
             formattedTime = "Tomorrow";
             temperature = _allWeather.day2.temperature;
-            weatherIcon = _allWeather.day2.weatherIcon;
+            condition = _allWeather.day2.condition;
           } else if (index == 2) {
             formattedTime =
                 dayFormat.format(_allWeather.day3.weatherList[0].time);
             temperature = _allWeather.day3.temperature;
-            weatherIcon = _allWeather.day3.weatherIcon;
+            condition = _allWeather.day3.condition;
           } else if (index == 3) {
             formattedTime =
                 dayFormat.format(_allWeather.day4.weatherList[0].time);
             temperature = _allWeather.day4.temperature;
-            weatherIcon = _allWeather.day4.weatherIcon;
+            condition = _allWeather.day4.condition;
           } else if (index == 4) {
             formattedTime =
                 dayFormat.format(_allWeather.day5.weatherList[0].time);
             temperature = _allWeather.day5.temperature;
-            weatherIcon = _allWeather.day5.weatherIcon;
+            condition = _allWeather.day5.condition;
           }
 
           return _listTile(
               formattedTime: formattedTime,
               temp: temperature,
-              icon: weatherIcon);
+              condition: condition);
         });
   }
 }
