@@ -1,60 +1,28 @@
 import 'dart:convert';
-
+import 'package:weather_app/data/weather_model.dart';
 import 'package:weather_app/models/location_model.dart';
 import 'package:http/http.dart' as http;
 import '../api.dart';
 
-const openWeatherMapUrl = 'https://api.openweathermap.org/data/2.5/weather';
+const forecastOpenWeatherMapUrl =
+    'https://api.openweathermap.org/data/2.5/forecast';
 
-class WeatherModel {
-  Future<dynamic> getCityWeather(String cityName) async {
-    NetworkHelper networkHelper = NetworkHelper(
-        '$openWeatherMapUrl?q=$cityName&appid=${MyKeys.weatherApiKey}&units=metric');
-    var weatherData = await networkHelper.getData();
-    return weatherData;
-  }
+const nowOpenWeatherMapUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
-  Future<dynamic> getLocationWeather() async {
+class WeatherClass {
+  Future<AllWeather> getWeather() async {
     Location location = Location();
     await location.getCurrentLocation();
 
-    NetworkHelper networkHelper = NetworkHelper(
-        '$openWeatherMapUrl?lat=${location.latitude}&lon=${location.longitude}&appid=${MyKeys.weatherApiKey}&units=metric');
+    Map<String, dynamic> forecastMap = await NetworkHelper(
+            '$forecastOpenWeatherMapUrl?lat=${location.latitude}&lon=${location.longitude}&appid=${MyKeys.weatherApiKey}&units=metric')
+        .getData();
 
-    var weatherData = await networkHelper.getData();
-    return weatherData;
-  }
+    Map<String, dynamic> nowMap = await NetworkHelper(
+            '$nowOpenWeatherMapUrl?lat=${location.latitude}&lon=${location.longitude}&appid=${MyKeys.weatherApiKey}&units=metric')
+        .getData();
 
-  String getWeatherIcon(int condition) {
-    if (condition < 300) {
-      return '🌩';
-    } else if (condition < 400) {
-      return '🌧';
-    } else if (condition < 600) {
-      return '☔️';
-    } else if (condition < 700) {
-      return '☃️';
-    } else if (condition < 800) {
-      return '🌫';
-    } else if (condition == 800) {
-      return '☀️';
-    } else if (condition <= 804) {
-      return '☁️';
-    } else {
-      return '';
-    }
-  }
-
-  String getMessage(int temp) {
-    if (temp > 25) {
-      return 'Sunny';
-    } else if (temp > 20) {
-      return 'Warm';
-    } else if (temp < 10) {
-      return 'Cold';
-    } else {
-      return '..';
-    }
+    return AllWeather.fromJsons(forecastJson: forecastMap, nowJson: nowMap);
   }
 }
 
